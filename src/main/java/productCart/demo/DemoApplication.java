@@ -23,7 +23,6 @@ public class DemoApplication {
     public CommandLineRunner constructCommandLineRunnerBean(final CartRepository cartRepository,
                                                             final ProductRepository productRepository) {
 
-
         return args -> {
             Cart cart1 = Cart.builder()
                     .dateOfOrder(LocalDate.of(2022, 06, 01))
@@ -42,5 +41,4 @@ public class DemoApplication {
             productRepository.save(milk);
         };
     }
-
 }

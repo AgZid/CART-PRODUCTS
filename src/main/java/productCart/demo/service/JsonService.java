@@ -7,7 +7,6 @@ import productCart.demo.model.Cart;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 @Service
 public class JsonService {
@@ -17,7 +16,6 @@ public class JsonService {
 
     public void exportToJson(Cart cart) {
 
-//        if (CollectionUtils) - prideti tikrinima, jei listas tuscias
         try {
             objectMapper.writeValue(new File("cart.json"), cart);
         } catch (IOException e) {

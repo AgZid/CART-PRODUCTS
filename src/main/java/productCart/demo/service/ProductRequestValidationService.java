@@ -41,7 +41,7 @@ public class ProductRequestValidationService {
 
         if (!missingFields.isEmpty() || !incorrectFields.isEmpty()) {
             throw new ProductRequestValidationException("Empty values " + missingFields +
-                    ". Incorrect values, values must be greater than zero " + incorrectFields );
+                    ". Incorrect values, values must be greater than zero " + incorrectFields);
         }
 
         LOGGER.info("Product request validate");

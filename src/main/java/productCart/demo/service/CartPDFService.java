@@ -12,7 +12,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CartPDFService {
@@ -42,7 +41,7 @@ public class CartPDFService {
             document.add(paragraph);
 
             paragraph = new Paragraph();
-            addEmptyLine(paragraph, 2 );
+            addEmptyLine(paragraph, 2);
             document.add(paragraph);
 
             //Sukuriame pdf langelius

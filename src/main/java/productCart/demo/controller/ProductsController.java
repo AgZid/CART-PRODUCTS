@@ -58,9 +58,7 @@ public class ProductsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<Product>> removeById(@PathVariable("id") int id ) throws ProductNotFoundException {
+    public ResponseEntity<List<Product>> removeById(@PathVariable("id") int id) throws ProductNotFoundException {
         return productService.removeById(id);
     }
-
-
 }
