@@ -27,7 +27,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setFrom("az.javamokymai@gmail.com");
-            helper.setTo("zidoniene.agne@gmail.com");
+            helper.setTo("az.javamokymai@gmail.com");
             helper.setSubject("Cart & Product service: Cart was removed");
             helper.setText(mailContent);
 
