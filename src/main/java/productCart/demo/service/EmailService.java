@@ -38,15 +38,5 @@ public class EmailService {
             throw new MailParseException(e);
         }
         mailSender.send(message);
-
-//        SimpleMailMessage msg = new SimpleMailMessage();
-//        msg.setFrom("az.javamokymai@gmail.com");
-//        msg.setTo("zidoniene.agne@gmail.com");
-//
-//        msg.setSubject("Cart & Product service: Cart was removed");
-//        msg.setText(mailContent);
-//
-//        javaMailSender.send(msg);
-
     }
 }
