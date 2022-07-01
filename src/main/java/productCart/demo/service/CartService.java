@@ -22,11 +22,13 @@ public class CartService {
     private final CartRepository cartRepository;
     private final EmailService emailService;
     private final JsonService jsonService;
+    private  final CartPDFService pdfService;
 
-    public CartService(CartRepository cartRepository, EmailService emailService, JsonService jsonService) {
+    public CartService(CartRepository cartRepository, EmailService emailService, JsonService jsonService, CartPDFService pdfService) {
         this.cartRepository = cartRepository;
         this.emailService = emailService;
         this.jsonService = jsonService;
+        this.pdfService = pdfService;
     }
 
     public ResponseEntity<List<Cart>> findAll() {
@@ -42,8 +44,8 @@ public class CartService {
     }
 
     public ResponseEntity<List<Cart>> update(Integer id, Cart cartToUpdate) throws CartNotFoundException {
-        Optional<Cart> foundCart = cartRepository.findById(id);
-        if (foundCart.isPresent()) {
+        if (isCartPresent(id)) {
+            Optional<Cart> foundCart = cartRepository.findById(id);
             LOGGER.info("Updating cart " + cartToUpdate);
             foundCart.map(
                     cart -> {
@@ -54,25 +56,35 @@ public class CartService {
             );
             LOGGER.info("Cart updated");
             return new ResponseEntity(cartRepository.findAll(), HttpStatus.OK);
-        } else {
-            throw new CartNotFoundException("Cart not found with id " + id);
-        }
+        } else return null;
     }
 
     public ResponseEntity<List<Cart>> remove(Integer id) throws MessagingException, IOException, CartNotFoundException {
-        Optional<Cart> foundCart = cartRepository.findById(id);
-        if (foundCart.isPresent()) {
+        if (isCartPresent(id)) {
+            Cart foundCart = cartRepository.findById(id).get();
+
             LOGGER.info("Creating Json file");
             jsonService.exportToJson(foundCart);
+
+            LOGGER.info("Creating PDF file");
+            pdfService.exportToPdf(foundCart);
+
             LOGGER.info("Removing cart id" + id);
             cartRepository.deleteById(id);
             LOGGER.info("Cart was removed");
+
             LOGGER.info("Sending email");
             emailService.sendEmail(String.format("Cart id %d was removed", id));
             LOGGER.info("Email was sent");
+
             return new ResponseEntity(cartRepository.findAll(), HttpStatus.OK);
-        } else {
+        } else return null;
+    }
+
+    public boolean isCartPresent(int id) throws CartNotFoundException {
+        Optional<Cart> foundCart = cartRepository.findById(id);
+        if (!foundCart.isPresent()) {
             throw new CartNotFoundException("Cart not found with id " + id);
-        }
+        } else return true;
     }
 }

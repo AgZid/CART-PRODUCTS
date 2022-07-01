@@ -1,8 +1,6 @@
 package productCart.demo.service;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -18,7 +16,12 @@ import java.util.Optional;
 
 @Service
 public class CartPDFService {
-    public void exportToPdf(final Optional<Cart> cart) {
+    private static final Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
+            Font.BOLD);
+    private static final Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+            Font.BOLD);
+
+    public void exportToPdf(Cart cart) {
 
         Document document = new Document();
 
@@ -28,6 +31,19 @@ public class CartPDFService {
             PdfWriter.getInstance(document, outputStream);
 
             document.open();
+            Anchor anchor = new Anchor("First Chapter", catFont);
+            anchor.setName("CART");
+
+            // Second parameter is the number of the chapter;
+            Paragraph paragraph = new Paragraph("Cart", subFont);
+            paragraph.add(new Paragraph(cart.getStatus().toString()));
+            paragraph.add(new Paragraph(cart.getDateOfOrder().toString()));
+
+            document.add(paragraph);
+
+            paragraph = new Paragraph();
+            addEmptyLine(paragraph, 2 );
+            document.add(paragraph);
 
             //Sukuriame pdf langelius
             PdfPCell cell1 = new PdfPCell(new Paragraph("Id"));
@@ -41,7 +57,7 @@ public class CartPDFService {
             pdfPTable.addCell(cell3);
             pdfPTable.addCell(cell4);
 
-            List<Product> products = cart.get().getProducts();
+            List<Product> products = cart.getProducts();
 
             for (Product product : products) {
                 PdfPCell productCell1 = new PdfPCell(new Paragraph(product.getId().toString()));
@@ -61,6 +77,12 @@ public class CartPDFService {
 
         } catch (IOException | DocumentException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void addEmptyLine(Paragraph paragraph, int number) {
+        for (int i = 0; i < number; i++) {
+            paragraph.add(new Paragraph(" "));
         }
     }
 }

@@ -15,7 +15,7 @@ public class JsonService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public void exportToJson(Optional<Cart> cart) {
+    public void exportToJson(Cart cart) {
 
 //        if (CollectionUtils) - prideti tikrinima, jei listas tuscias
         try {

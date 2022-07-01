@@ -24,11 +24,13 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
     private final ProductRequestValidationService productRequestValidationService;
+    private  final CartService cartService;
 
-    public ProductService(ProductRepository productRepository, CartRepository cartRepository, ProductRequestValidationService productRequestValidationService) {
+    public ProductService(ProductRepository productRepository, CartRepository cartRepository, ProductRequestValidationService productRequestValidationService, CartService cartService) {
         this.productRepository = productRepository;
         this.cartRepository = cartRepository;
         this.productRequestValidationService = productRequestValidationService;
+        this.cartService = cartService;
     }
 
     public ResponseEntity<List<Product>> findAll() {
@@ -66,7 +68,7 @@ public class ProductService {
 
     public ResponseEntity<List<Product>> assignProductToCart(int productId, int cartId) throws ProductNotFoundException, CartNotFoundException {
         LOGGER.info("Assigning product " + productId + " to cart " + cartId);
-        if (isProductPresent(productId) && isCartPresent(cartId)) {
+        if (isProductPresent(productId) &&  cartService.isCartPresent(cartId)) {
             Product product = productRepository.findById(productId).get();
             Cart cart = cartRepository.findById(cartId).get();
             product.setCart(cart);
@@ -106,13 +108,6 @@ public class ProductService {
         Optional<Product> foundProduct = productRepository.findById(id);
         if (!foundProduct.isPresent()) {
             throw new ProductNotFoundException("Product not found with id " + id);
-        } else return true;
-    }
-
-    private boolean isCartPresent(int id) throws CartNotFoundException {
-        Optional<Product> foundCart = productRepository.findById(id);
-        if (!foundCart.isPresent()) {
-            throw new CartNotFoundException("Cart not found with id " + id);
         } else return true;
     }
 
